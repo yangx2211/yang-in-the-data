@@ -1,5 +1,6 @@
 ---
 layout: default
+permalink: /
 ---
 
 [Home](./) · [Examples & workshops](dataviz-examples.html) · [Critique by Design](critique-by-design.html) · [Final project](final-project-part-one.html)
