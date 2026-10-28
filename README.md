@@ -52,5 +52,3 @@ My final data story will develop here, from the initial question and data source
 ### About this site
 
 Created for **Telling Stories with Data · CMU · Fall 2026**, using the [course portfolio template](https://github.com/cmustudent/tswd-portfolio-templates).
-
-**AI acknowledgement:** I used OpenAI Codex to help draft introductory text, organize the portfolio, and set up the website.
