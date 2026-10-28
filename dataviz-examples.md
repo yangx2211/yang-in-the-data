@@ -1,4 +1,19 @@
-| [home page](https://cmustudent.github.io/tswd-portfolio-templates/) | [data viz examples](dataviz-examples) | [critique by design](critique-by-design) | [final project I](final-project-part-one) | [final project II](final-project-part-two) | [final project III](final-project-part-three) |
+---
+layout: default
+---
 
-# Data visualization examples
-_You can place some of your data viz examples from the course here.  Make sure to include any citations / references / data sources used, and it's probably a good idea to explain what these visualizations show._
+[Home](./) · [Examples & workshops](dataviz-examples.html) · [Critique by Design](critique-by-design.html) · [Final project](final-project-part-one.html)
+
+---
+
+# Examples & workshops
+
+This page will collect visualization examples, in-class exercises, and short reflections throughout the course.
+
+## Visualization examples
+
+*Coming soon.* For each example, I will note its source, intended audience, main takeaway, and the design choices that help or hinder understanding.
+
+## Workshop exercises
+
+*Coming soon.* This section will document charts, experiments, and lessons from class workshops.

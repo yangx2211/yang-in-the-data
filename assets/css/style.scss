@@ -1,0 +1,15 @@
+---
+---
+@import "{{ site.theme }}";
+body { color: #263847; background: #fafbf9; }
+.page-header { background-color: #163d46; background-image: linear-gradient(115deg, #153f48, #326b66); padding: 4rem 1rem 3rem; }
+.project-name { letter-spacing: -0.04em; font-weight: 700; }
+.project-tagline { opacity: .9; }
+.page-header .btn { display: none; }
+.main-content { max-width: 62rem; padding-top: 2.2rem; line-height: 1.8; }
+.main-content h1, .main-content h2, .main-content h3 { color: #205b5d; letter-spacing: -.025em; }
+.main-content h2 { margin-top: 2.5rem; padding-top: .8rem; border-top: 1px solid #dce6e2; }
+a { color: #216d79; text-underline-offset: 3px; }
+.main-content hr { background-color: #dce6e2; }
+.site-footer { font-size: .8rem; }
+@media (max-width: 42em) { .page-header { padding: 2.5rem 1rem; } .main-content { padding: 1.5rem; } }
