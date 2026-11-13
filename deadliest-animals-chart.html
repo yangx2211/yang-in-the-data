@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The world’s deadliest animals · MakeoverMonday</title>
+<style>
+:root {
+  color-scheme: light;
+  --ink: #302923;
+  --muted: #665b52;
+  --rule: #e9ded3;
+  --bar: #ad7951;
+  --focus: #935024;
+  --cap: #542c18;
+}
+* { box-sizing: border-box; }
+body {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 32px clamp(14px, 4vw, 48px);
+  color: var(--ink);
+  font: 14px/1.45 system-ui, sans-serif;
+}
+h1 { margin: 0; font: 600 clamp(27px, 4.6vw, 46px)/1.1 Georgia, serif; }
+.subtitle { margin: 8px 0 13px; color: var(--muted); }
+.chart-layout { display: grid; grid-template-columns: minmax(0, 1fr) 185px; gap: 24px; align-items: start; }
+.chart { --columns: clamp(105px, 24%, 205px) minmax(0, 1fr) 8ch; }
+.chart-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: white;
+  padding: 6px 0 4px;
+  border-bottom: 1px solid var(--rule);
+}
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 38px;
+}
+.scale-title { margin: 0; font-size: 13px; font-weight: 650; }
+.reset {
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border: 1px solid #cbb8a7;
+  border-radius: 5px;
+  color: var(--ink);
+  background: white;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.reset:disabled { opacity: .55; cursor: default; }
+.axis, .row {
+  display: grid;
+  grid-template-columns: var(--columns);
+  align-items: center;
+  gap: 10px;
+  padding: 0 8px;
+}
+.axis { color: var(--muted); font-size: 11px; }
+.axis-scale { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.axis-scale span:nth-child(2) { text-align: center; }
+.axis-scale span:last-child, .number { text-align: right; }
+.row {
+  width: 100%;
+  min-height: 33px;
+  padding-block: 3px;
+  background: white;
+  color: var(--ink);
+  border: 0;
+  border-bottom: 1px solid #f1eae3;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.name { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.name > span { overflow-wrap: anywhere; }
+.name img { width: 23px; height: 23px; flex: 0 0 23px; }
+[data-mechanism="infection"] { --hue: 27; --saturation: 48%; }
+[data-mechanism="venom"] { --hue: 274; --saturation: 38%; }
+[data-mechanism="injury"] { --hue: 211; --saturation: 48%; }
+[data-mechanism="violence"] { --hue: 343; --saturation: 42%; }
+[data-mechanism="mixed"] { --hue: 225; --saturation: 7%; }
+.row[data-mechanism] {
+  --bar: hsl(var(--hue) var(--saturation) var(--lightness, 53%));
+  --cap: hsl(var(--hue) var(--saturation) 21%);
+}
+.mechanism-key { position: sticky; top: 16px; padding: 12px 0 0 13px; border-left: 1px solid var(--rule); }
+.mechanism-key h2 { margin: 0 0 10px; font-size: 14px; }
+.mechanism-key ul { list-style: none; margin: 0; padding: 0; }
+.mechanism-key li { display: flex; align-items: center; gap: 7px; margin: 0 0 9px; font-size: 12px; }
+.mechanism-key p { margin: 8px 0 0; color: var(--muted); font-size: 11px; }
+.swatch {
+  flex: 0 0 25px;
+  height: 10px;
+  border-radius: 2px;
+  background: linear-gradient(to right, hsl(var(--hue) var(--saturation) 68%), hsl(var(--hue) var(--saturation) 30%));
+}
+.row.is-focused { background: #fbf1e7; font-weight: 700; }
+button:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.track {
+  position: relative;
+  height: 13px;
+  border-left: 1px solid #bdac9e;
+  border-right: 1px solid var(--rule);
+  background: linear-gradient(to right, transparent calc(50% - .5px), var(--rule) calc(50% - .5px), var(--rule) calc(50% + .5px), transparent calc(50% + .5px));
+}
+.bar {
+  display: block;
+  position: relative;
+  height: 100%;
+  background: var(--bar);
+  border-radius: 0 2px 2px 0;
+  transition: width 150ms ease-out;
+}
+.row.is-capped .bar, .cap-sample {
+  background: linear-gradient(to right, var(--bar) calc(100% - 22px), var(--cap));
+}
+.row.is-capped .bar::after, .cap-sample::after {
+  position: absolute;
+  right: 3px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-top: 1.5px solid white;
+  border-right: 1.5px solid white;
+  transform: translateY(-50%) rotate(45deg);
+  content: "";
+}
+.row.is-lower-bound:not(.is-capped) .bar::after {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  border-block: 4px solid transparent;
+  border-left: 5px solid var(--bar);
+  transform: translateY(-50%);
+  content: "";
+}
+.number, .axis-scale { font-variant-numeric: tabular-nums; }
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 16px;
+  margin: 6px 0 2px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.cap-sample { display: inline-block; position: relative; width: 25px; height: 10px; }
+.source { margin: 13px 0 0; color: var(--muted); font-size: 12px; }
+a { color: var(--focus); text-underline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 760px) {
+  .chart-layout { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .mechanism-key { grid-row: 1; position: static; padding: 0; border: 0; }
+  .mechanism-key ul { display: flex; flex-wrap: wrap; gap: 3px 12px; }
+  .mechanism-key li { margin: 0; }
+}
+@media (max-width: 480px) {
+  .axis, .row { gap: 6px; padding-inline: 4px; }
+  .row { font-size: 12px; min-height: 39px; }
+  .axis { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .bar { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>The world’s deadliest animals</h1>
+  <p class="subtitle">Estimated human deaths per year worldwide, by animal group</p>
+  <div class="chart-layout">
+  <section class="chart" aria-label="Animal death estimates">
+    <div class="chart-head">
+      <div class="toolbar">
+        <p class="scale-title" id="scale-title" aria-live="polite">Overview · 0–800,000</p>
+        <button class="reset" id="reset" type="button" disabled>Reset scale</button>
+      </div>
+      <div class="axis" aria-hidden="true">
+        <span>Animal group</span>
+        <div class="axis-scale"><span>0</span><span id="midpoint">400,000</span><span id="maximum">800,000</span></div>
+        <span class="number">Deaths / year</span>
+      </div>
+      <p class="legend">
+        <span><i class="cap-sample" aria-hidden="true"></i> Dark tip means beyond the displayed scale</span>
+        <span><b aria-hidden="true">&gt;</b> Published lower bound</span>
+      </p>
+    </div>
+    <div id="rows">
+      <button type="button" class="row" data-mechanism="infection" data-value="760000" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1F99F.svg" alt=""><span>Mosquitoes</span></span><span class="sr-only">Infection and parasites</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 95%"></span></span>
+        <span class="number">760,000<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="violence" data-value="600000" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1F9CD.svg" alt=""><span>Humans</span></span><span class="sr-only">Human violence</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 75%"></span></span>
+        <span class="number">600,000<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="venom" data-value="100000" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1F40D.svg" alt=""><span>Snakes</span></span><span class="sr-only">Venom and sting reactions</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 12.5%"></span></span>
+        <span class="number">100,000<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="infection" data-value="40000" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1F415.svg" alt=""><span>Dogs</span></span><span class="sr-only">Infection and parasites</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 5%"></span></span>
+        <span class="number">40,000<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="infection" data-value="14000" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1F40C.svg" alt=""><span>Freshwater snails</span></span><span class="sr-only">Infection and parasites</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 1.75%"></span></span>
+        <span class="number">14,000<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="infection" data-value="8000" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1FAB2.svg" alt=""><span>Kissing bugs</span></span><span class="sr-only">Infection and parasites</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 1%"></span></span>
+        <span class="number">8,000<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="infection" data-value="5000" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1FAB0.svg" alt=""><span>Sandflies</span></span><span class="sr-only">Infection and parasites</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 0.625%"></span></span>
+        <span class="number">5,000<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="infection" data-value="4000" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1FAB1.svg" alt=""><span>Roundworms</span></span><span class="sr-only">Infection and parasites</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 0.5%"></span></span>
+        <span class="number">4,000<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="venom" data-value="3000" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1F982.svg" alt=""><span>Scorpions</span></span><span class="sr-only">Venom and sting reactions</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 0.375%"></span></span>
+        <span class="number">3,000<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="infection" data-value="2000" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1FAB1.svg" alt=""><span>Tapeworms</span></span><span class="sr-only">Infection and parasites</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 0.25%"></span></span>
+        <span class="number">2,000<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="infection" data-value="1500" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1FAB0.svg" alt=""><span>Tsetse flies</span></span><span class="sr-only">Infection and parasites</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 0.1875%"></span></span>
+        <span class="number">1,500<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="injury" data-value="1000" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1F418.svg" alt=""><span>Elephants</span></span><span class="sr-only">Physical attacks</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 0.125%"></span></span>
+        <span class="number">1,000<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="venom" data-value="500" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1F41D.svg" alt=""><span>Bees, wasps &amp; hornets</span></span><span class="sr-only">Venom and sting reactions</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 0.0625%"></span></span>
+        <span class="number">500<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="injury" data-value="300" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1F405.svg" alt=""><span>Big cats</span></span><span class="sr-only">Physical attacks</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 0.0375%"></span></span>
+        <span class="number">300<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="injury" data-value="150" data-qualifier="&gt;" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1F40A.svg" alt=""><span>Crocodiles</span></span><span class="sr-only">Physical attacks</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 0.01875%"></span></span>
+        <span class="number">&gt;150<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="venom" data-value="100" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1FABC.svg" alt=""><span>Jellyfish</span></span><span class="sr-only">Venom and sting reactions</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 0.0125%"></span></span>
+        <span class="number">100<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="injury" data-value="50" data-qualifier="&gt;" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1F99B.svg" alt=""><span>Hippopotamuses</span></span><span class="sr-only">Physical attacks</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 0.00625%"></span></span>
+        <span class="number">&gt;50<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="venom" data-value="50" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1F577.svg" alt=""><span>Spiders</span></span><span class="sr-only">Venom and sting reactions</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 0.00625%"></span></span>
+        <span class="number">50<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="injury" data-value="20" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1F43B.svg" alt=""><span>Bears</span></span><span class="sr-only">Physical attacks</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 0.0025%"></span></span>
+        <span class="number">20<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="injury" data-value="6" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1F988.svg" alt=""><span>Sharks</span></span><span class="sr-only">Physical attacks</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 0.00075%"></span></span>
+        <span class="number">6<span class="sr-only overflow-note"></span></span>
+      </button>
+      <button type="button" class="row" data-mechanism="mixed" data-value="5" data-qualifier="" aria-pressed="false">
+        <span class="name"><img src="assets/deadliest-animals/icons/1F43A.svg" alt=""><span>Gray wolves</span></span><span class="sr-only">Mixed mechanisms</span>
+        <span class="track" aria-hidden="true"><span class="bar" style="width: 0.000625%"></span></span>
+        <span class="number">5<span class="sr-only overflow-note"></span></span>
+      </button>
+    </div>
+  </section>
+  <aside class="mechanism-key" aria-labelledby="mechanism-title">
+    <h2 id="mechanism-title">How deaths occur</h2>
+    <ul>
+      <li data-mechanism="infection"><span class="swatch" aria-hidden="true"></span>Infection and parasites</li>
+      <li data-mechanism="venom"><span class="swatch" aria-hidden="true"></span>Venom and sting reactions</li>
+      <li data-mechanism="injury"><span class="swatch" aria-hidden="true"></span>Physical attacks</li>
+      <li data-mechanism="violence"><span class="swatch" aria-hidden="true"></span>Human violence</li>
+      <li data-mechanism="mixed"><span class="swatch" aria-hidden="true"></span>Mixed mechanisms</li>
+    </ul>
+    <p>Darker shades represent higher published figures within each color. Categories reflect the mechanisms described in the source.</p>
+    <p><a href="https://docs.owid.io/projects/etl/analyses/deadliest_animals/">OWID methodology</a></p>
+  </aside>
+  </div>
+  <p class="source">Rounded estimates for 21 selected groups. <a href="https://makeovermonday.vercel.app/dataset/what-are-the-world-s-deadliest-animals">MakeoverMonday data</a> · <a href="https://ourworldindata.org/deadliest-animals">Original chart by Our World in Data</a></p>
+  <p class="source">Representative animal icons by <a href="https://openmoji.org/">OpenMoji</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></p>
+</main>
+<script>
+const overviewMaximum = 800000;
+const chartRows = document.getElementById("rows");
+const scaleTitle = document.getElementById("scale-title");
+const midpoint = document.getElementById("midpoint");
+const maximum = document.getElementById("maximum");
+const reset = document.getElementById("reset");
+const rows = Array.from(chartRows.querySelectorAll(".row"), button => ({
+  button,
+  name: button.querySelector(".name").textContent,
+  value: Number(button.dataset.value),
+  lowerBound: button.dataset.qualifier === ">",
+  bar: button.querySelector(".bar"),
+  note: button.querySelector(".overflow-note"),
+}));
+const format = new Intl.NumberFormat("en-US");
+const largestEstimate = Math.log10(Math.max(...rows.map(row => row.value)));
+const smallestEstimate = Math.log10(Math.min(...rows.map(row => row.value)));
+let preview = null;
+let locked = null;
+
+function renderScale() {
+  const selected = preview || locked;
+  const limit = selected ? 2 * selected.value : overviewMaximum;
+  const label = selected ? (selected.lowerBound ? ">" : "") + format.format(selected.value) : "";
+  const mode = locked && locked === selected ? " · locked" : "";
+
+  scaleTitle.textContent = selected
+    ? selected.name + " · " + label + " at midpoint" + mode
+    : "Overview · 0–" + format.format(overviewMaximum);
+  midpoint.textContent = format.format(limit / 2);
+  maximum.textContent = format.format(limit);
+  reset.disabled = selected === null;
+
+  for (const row of rows) {
+    const capped = row.value > limit || (row.value === limit && row.lowerBound);
+    row.bar.style.width = (100 * Math.min(row.value, limit) / limit) + "%";
+    row.button.classList.toggle("is-focused", selected === row);
+    row.button.classList.toggle("is-capped", capped);
+    row.button.classList.toggle("is-lower-bound", row.lowerBound);
+    row.button.setAttribute("aria-pressed", String(locked === row));
+    row.note.textContent = capped ? ", above displayed scale" : "";
+  }
+}
+
+for (const row of rows) {
+  // Logarithmic color spacing keeps differences visible among the smallest estimates.
+  const intensity = (Math.log10(row.value) - smallestEstimate) / (largestEstimate - smallestEstimate);
+  row.button.style.setProperty("--lightness", (68 - 38 * intensity) + "%");
+  row.button.addEventListener("pointerenter", event => {
+    if (event.pointerType !== "mouse") return;
+    preview = row;
+    renderScale();
+  });
+  row.button.addEventListener("focus", () => {
+    if (!row.button.matches(":focus-visible")) return;
+    preview = row;
+    renderScale();
+  });
+  row.button.addEventListener("click", () => {
+    locked = locked === row ? null : row;
+    preview = null;
+    renderScale();
+  });
+}
+
+chartRows.addEventListener("pointerleave", () => {
+  preview = null;
+  renderScale();
+});
+chartRows.addEventListener("focusout", event => {
+  if (chartRows.contains(event.relatedTarget)) return;
+  preview = null;
+  renderScale();
+});
+
+function resetScale() {
+  preview = null;
+  locked = null;
+  renderScale();
+}
+
+reset.addEventListener("click", resetScale);
+document.querySelector(".chart").addEventListener("keydown", event => {
+  if (event.key === "Escape") resetScale();
+});
+renderScale();
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>How animals cause human deaths</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f0e7;color:#183c35;font-family:Arial,sans-serif}main{max-width:1080px;margin:auto;padding:35px 34px 60px}a{color:inherit}nav{display:flex;justify-content:space-between;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:45px}h1{font-family:Georgia,serif;font-size:clamp(42px,7vw,80px);line-height:1.01;letter-spacing:-2px;margin:12px 0 20px;max-width:850px}h1 em{color:#bf542e}p{line-height:1.6}.intro{max-width:700px;color:#54665c;font-size:17px}.eyebrow{font-size:12px;font-weight:bold;letter-spacing:2px}.hero{border:1px solid #c8ccbe;border-radius:22px;margin:30px 0 35px;background:#fffdf7;overflow:hidden}.cards{display:grid;grid-template-columns:1fr .7fr 1fr;align-items:center;padding:25px}.animal{text-align:center}.animal img{width:108px;height:108px}.animal strong{display:block;font-family:Georgia,serif;font-size:42px;margin:8px}.animal span{display:block;color:#627166;font-size:13px}.versus{text-align:center}.versus strong{display:block;font-size:27px;color:#bf542e}.versus p{font-size:12px}.select-wrap{display:flex;justify-content:center;gap:8px;margin-top:12px;align-items:center;font-size:12px}select,button{font:inherit;color:inherit}select{max-width:185px;padding:7px;border:1px solid #c7cdbf;border-radius:7px;background:#fffdf7}.hero-note{background:#e9ecdf;padding:14px 24px;margin:0;font-size:13px}.section-header{display:flex;align-items:end;justify-content:space-between;gap:20px}h2{font-family:Georgia,serif;font-size:32px;margin:0 0 10px}.hint{font-size:13px;color:#5b6a60;margin-top:0}.controls{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.controls button{border:1px solid #9cae9b;background:transparent;padding:10px 16px;border-radius:30px;cursor:pointer}.controls button[aria-pressed=true]{background:#214a3e;color:white;border-color:#214a3e}button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #bd5b37;outline-offset:4px}.chart{background:#fffdf7;border:1px solid #c8ccbe;border-radius:18px;padding:20px 22px}#scale-note{font-size:13px;font-weight:bold;margin:0 0 16px}.axis,.row{display:grid;grid-template-columns:215px 1fr 95px;gap:14px}.axis{font-size:11px;color:#58695c;margin-bottom:10px}.ticks{display:flex;justify-content:space-between}.row{align-items:center;min-height:53px;border-top:1px solid #edf0e7}.identity{display:flex;align-items:center;gap:10px;font-size:14px}.identity img{width:40px;height:40px;flex-shrink:0}.track{height:19px;background:repeating-linear-gradient(to right,#dfe4d8 0,#dfe4d8 1px,transparent 1px,transparent 25%);border-left:1px solid #7c8d7b;position:relative}.bar{height:100%;background:#527c63;transition:width .35s ease;border-radius:0 3px 3px 0}.number{font-variant-numeric:tabular-nums;text-align:right;font-size:14px;font-weight:bold}#hidden-note{font-size:12px;color:#5c6e5f}.note-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:28px}.note-grid h3{font-size:16px}.note-grid p,footer{font-size:12px;color:#56695d}footer{border-top:1px solid #c7ccbc;margin-top:30px;padding-top:20px;line-height:1.8}details{font-size:12px;line-height:1.7;margin-top:12px}summary{cursor:pointer} @media(max-width:650px){main{padding:25px 16px}nav{font-size:10px;letter-spacing:.5px}h1{letter-spacing:-1px}.cards{padding:15px 6px;grid-template-columns:1fr .65fr 1fr}.animal img{width:70px;height:70px}.animal strong{font-size:28px}.versus strong{font-size:19px}.animal span{font-size:11px}.select-wrap{display:block}.select-wrap label{display:block;margin-bottom:5px}select{max-width:120px;font-size:12px}.axis,.row{grid-template-columns:142px 1fr 65px;gap:7px}.identity{font-size:11px;gap:5px}.identity img{width:29px;height:29px}.chart{padding:16px 10px}.number{font-size:12px}.ticks{font-size:8px}.note-grid{grid-template-columns:1fr;gap:0}.controls button{padding:9px 11px;font-size:12px}.section-header{display:block}}@media(prefers-reduced-motion:reduce){.bar{transition:none}}
+</style>
+<link rel="stylesheet" href="assets/deadliest-animals/explorer.css">
+</head><body><main>
+<nav><a href="deadliest-animals.html">← Process & critique</a><span>MakeoverMonday · 2026 / W37</span></nav>
+<div class="eyebrow">THE WORLD’S DEADLIEST ANIMALS</div>
+<h1>How animals cause<br><em>human deaths</em></h1>
+<p class="intro">Mosquitoes and dogs are far apart in the ranking, but their estimates share an important feature. Both largely reflect deaths from infections. Group the animals by how deaths occur, then open any row to see how its estimate was made.</p>
+<section aria-labelledby="ranking-title">
+  <div class="section-header">
+    <div><h2 id="ranking-title">Explore the estimates</h2>
+      <p class="hint">Hover or select an animal to magnify nearby estimates and see the evidence.</p>
+    </div>
+    <span class="eyebrow">21 ANIMAL GROUPS</span>
+  </div>
+  <div class="explorer-controls">
+    <div class="controls" role="group" aria-label="Chart view">
+      <span class="control-label">View</span>
+      <button type="button" data-view="rank" aria-pressed="true">By animal</button>
+      <button type="button" data-view="mechanism" aria-pressed="false">By mechanism</button>
+    </div>
+    <div class="controls" role="group" aria-label="Chart zoom">
+      <span class="control-label">Zoom</span>
+      <button type="button" data-limit="800000" aria-pressed="true">All animals</button>
+      <button type="button" data-limit="10000" aria-pressed="false">Below 10,000</button>
+      <button type="button" data-limit="1000" aria-pressed="false">Below 1,000</button>
+    </div>
+  </div>
+  <p class="group-note" id="view-note" hidden>Each animal appears once, based on the cause emphasized in its source. The same scale applies to every group.</p>
+  <div class="explorer-layout">
+    <div class="chart">
+      <p id="scale-note" aria-live="polite"></p>
+      <div class="axis" aria-hidden="true">
+        <span>Animal group</span><div class="ticks" id="ticks"></div><span class="number-heading">Deaths / year</span>
+      </div>
+      <div id="rows"></div>
+      <p id="hidden-note" aria-live="polite"></p>
+      <noscript>Enable JavaScript to use the ranking and evidence cards.</noscript>
+    </div>
+    <aside id="evidence-column" aria-label="Evidence panel"></aside>
+  </div>
+</section>
+<details class="compare-details"><summary>Compare an animal with mosquitoes</summary>
+<section class="hero" aria-label="Compare estimates"><div class="cards"><div class="animal"><img src="assets/deadliest-animals/icons/1F99F.svg" alt=""><span>MOSQUITOES</span><strong>760,000</strong><span>estimated deaths / year</span></div><div class="versus" aria-live="polite"><strong id="ratio"></strong><p id="ratio-label">as many deaths<br>in these estimates</p></div><div class="animal"><img id="compare-icon" alt=""><span id="compare-name"></span><strong id="compare-value"></strong><span>estimated deaths / year</span><div class="select-wrap"><label for="compare">Compare with</label><select id="compare"></select></div></div></div><p class="hero-note">Mosquitoes cause deaths by transmitting diseases. Global death totals reflect both exposure and harm, so this comparison describes the overall burden.</p></section>
+</details>
+<div class="note-grid"><div><h3>What counts as a death?</h3><p>The estimates include infection, envenoming, allergic reactions and injuries. Humans are included for deaths from violence and conflict. The original chart uses 2023 as its reference year, with some estimates drawing on other years.</p></div><div><h3>Read the estimates with care.</h3><p>Values are rounded and cover selected groups. An arrow and “>” mark a published lower bound. Zoom uses the displayed figures to choose rows and changes the shared axis.</p></div></div>
+<footer>Data · <a href="https://ourworldindata.org/deadliest-animals">Our World in Data</a>, Hannah Ritchie and Fiona Spooner · <a href="https://docs.owid.io/projects/etl/analyses/deadliest_animals/">Methods</a> · <a href="https://makeovermonday.vercel.app/dataset/what-are-the-world-s-deadliest-animals">MakeoverMonday dataset</a><br>Icons · <a href="https://openmoji.org/">OpenMoji</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · SVG artwork used without modification.
+<details><summary>About the animal symbols</summary>Icons identify groups and have equal visual size. Generic fly artwork represents sandflies and tsetse flies, worm artwork represents roundworms and tapeworms, and beetle artwork represents kissing bugs. The snail, bee, tiger and wolf symbols represent their broader labeled groups. These are illustrative symbols rather than species identification images.</details></footer>
+</main>
+<script src="assets/deadliest-animals/explorer.js"></script>
+</body></html>

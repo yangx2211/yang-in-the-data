@@ -40,7 +40,7 @@ A future assignment exploring how different visual choices shape our understandi
 
 A space to evaluate an existing visualization, develop an alternative, and reflect on the redesign.
 
-[View critique & redesign →](critique-by-design.html)
+[View critique & redesign →](critique-by-design.html) · [MakeoverMonday: Deadliest Animals →](deadliest-animals.html)
 
 ### Final project
 

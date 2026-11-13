@@ -1,0 +1,6 @@
+All icons designed by OpenMoji, the open-source emoji and icon project.
+https://openmoji.org/
+License CC BY-SA 4.0
+https://creativecommons.org/licenses/by-sa/4.0/
+Unmodified SVGs downloaded 2026-11-10 from https://github.com/hfg-gmuend/openmoji/tree/master/color/svg
+See the interactive chart footer for representative group mappings.
