@@ -19,13 +19,13 @@ I chose this chart because the difference surprised me. The estimates range from
 
 ## Critique
 
-The large blocks make mosquitoes and humans stand out. The animal silhouettes help readers find familiar entries. The colors distinguish mosquitoes from humans, but the chart gives no legend explaining the red and blue. The smallest bars, though, look like nearly identical lines. The design also switches from area to length, so comparing the two sections depends on reading the labels. Few’s criteria helped me separate the impact of the first impression from the ease of comparing values. [Stephen Few’s evaluation framework](https://perceptualedge.com/articles/visual_business_intelligence/data_visualization_effectiveness_profile.pdf)
+The large blocks make mosquitoes and humans stand out. The animal silhouettes help readers find familiar entries. The colors distinguish mosquitoes from humans, but the chart gives no legend explaining the red and blue. The smallest bars, though, look like nearly identical lines. The design also switches from area to length, so comparing the two sections depends on reading the labels. Few’s criteria helped me separate the impact of the first impression from the ease of comparing values.
 
-The chart uses rounded estimates and marks two lower bounds with “>”. The methods draw on several sources and periods. For example, the shark estimate comes from a decade of recorded deaths. [Estimation methods](https://docs.owid.io/projects/etl/analyses/deadliest_animals/)
+The chart uses rounded estimates and marks two lower bounds with “>”. The methods draw on several sources and periods. For example, the shark estimate comes from a decade of recorded deaths.
 
 ## Early prototype
 
-The first interactive version had separate ranking and mechanism views. A side panel showed the selected animal’s estimate, a close-up of nearby values, and notes on the source. [Open the early prototype](deadliest-animals-interactive.html)
+The first interactive version had separate ranking and mechanism views. A side panel showed the selected animal’s estimate, a close-up of nearby values, and notes on the source.
 
 ![Screenshot of the early HTML prototype with animal and mechanism views, a bar chart, and a separate evidence panel.](assets/deadliest-animals/earlier-prototype.png)
 
@@ -36,14 +36,16 @@ The first interactive version had separate ranking and mechanism views. A side p
 
 ## Final redesign
 
+![Initial view of the final interactive bar chart with all 21 animal groups and a color legend for cause of death.](assets/deadliest-animals/final-chart-overview.png)
+
 [Open the interactive bar chart →](deadliest-animals-chart.html)
 
 All 21 groups share one axis. Hovering over a row puts its displayed value at the midpoint and rescales the bars in place. A click holds the scale. Color identifies the mechanism described in the original source’s methods. Darker shades mark larger published figures within each color. The legend explains both, and the animal icons help readers find each row.
 
-For example, selecting spiders puts 50 at the center and 100 at the right edge. The jellyfish bar reaches that edge. The crocodile bar also reaches it, with a dark arrow tip and its original “>150” label. The axis can change between selections, so bar lengths are comparable within the current view. [Challenge data](https://makeovermonday.vercel.app/dataset/what-are-the-world-s-deadliest-animals)
+For example, selecting spiders puts 50 at the center and 100 at the right edge. The jellyfish bar reaches that edge. The crocodile bar also reaches it, with a dark arrow tip and its original “>150” label. The axis can change between selections, so bar lengths are comparable within the current view.
 
 ## AI and tools
 
-I used OpenAI Codex to write the HTML, CSS, and JavaScript for the interactive chart. I also used Codex to look up the mechanisms described in the original chart’s Our World in Data methodology and use them to label the chart. [OWID methodology](https://docs.owid.io/projects/etl/analyses/deadliest_animals/)
+I used OpenAI Codex to write the HTML, CSS, and JavaScript for the interactive chart. I also used Codex to look up the mechanisms described in the original chart’s Our World in Data methodology and use them to label the chart.
 
-Both interactive versions use OpenMoji icons under CC BY-SA 4.0. [OpenMoji](https://openmoji.org/) · [Icon license](https://creativecommons.org/licenses/by-sa/4.0/)
+Both interactive versions use OpenMoji icons under CC BY-SA 4.0.
