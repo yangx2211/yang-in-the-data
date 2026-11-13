@@ -23,13 +23,11 @@ The large blocks make mosquitoes and humans stand out. The animal silhouettes he
 
 The chart uses rounded estimates and marks two lower bounds with “>”. The methods draw on several sources and periods. For example, the shark estimate comes from a decade of recorded deaths. [Estimation methods](https://docs.owid.io/projects/etl/analyses/deadliest_animals/)
 
-## Wireframe and iterations
+## Early prototype
 
-My first sketch used three panels with separate scales. It made small values easier to see, but comparing across panels meant checking each axis.
+The first interactive version had separate ranking and mechanism views. A side panel showed the selected animal’s estimate, a close-up of nearby values, and notes on the source. [Open the early prototype](deadliest-animals-interactive.html)
 
-![Wireframe with three groups of horizontal bars on separate scales.](assets/deadliest-animals/wireframe.png)
-
-I tried grouping animals by how deaths occur and adding evidence cards with a small zoomed chart. I also considered a map. The CSV contains global estimates, and the geographic studies I found covered different places and time periods. I settled on one chart with in-place zoom so the reader can keep looking at the same rows. [Earlier prototype](deadliest-animals-interactive.html)
+![Screenshot of the early HTML prototype with animal and mechanism views, a bar chart, and a separate evidence panel.](assets/deadliest-animals/earlier-prototype.png)
 
 ## Peer testing and revisions
 
