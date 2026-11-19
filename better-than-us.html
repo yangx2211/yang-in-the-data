@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Better Than Us, or Replacing Us?</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #faf8f2;
+      --ink: #222420;
+      --muted: #585951;
+      --line: #d9d5ca;
+      --track: #e9e5da;
+      --blue: #29577b;
+      --blue-tint: #e5f1fa;
+      --orange: #ac542e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font: 1rem/1.6 system-ui, sans-serif;
+    }
+    main { max-width: 880px; margin-inline: auto; padding: clamp(36px, 8vw, 100px) clamp(18px, 5vw, 52px) 48px; }
+    header { padding-bottom: clamp(30px, 6vw, 58px); }
+    .survey { margin: 0 0 .7rem; color: var(--muted); font-size: .9rem; }
+    h1, h2 { margin: 0 0 .6rem; line-height: 1.15; font-weight: 650; }
+    h1 { max-width: 19ch; font-size: clamp(2.35rem, 6vw, 4.1rem); }
+    h2 { font-size: clamp(1.55rem, 4vw, 2.2rem); }
+    h3 { margin: 0 0 .55rem; font-size: 1rem; font-weight: 600; }
+    p { margin: 0 0 1rem; }
+    .deck { margin-top: .95rem; max-width: 53ch; color: var(--muted); font-size: 1.07rem; }
+    section { border-top: 1px solid var(--line); padding-block: clamp(28px, 5.5vw, 53px); }
+    .context { color: var(--muted); max-width: 62ch; }
+    figure { margin: 1.3rem 0 0; }
+    figcaption { margin-top: 1.15rem; max-width: 60ch; }
+    strong { font-weight: 650; }
+    .controls { min-width: 0; margin: 0 0 1rem; padding: 0; border: 0; }
+    .controls legend, .choice-row span, summary, .source-link {
+      text-transform: uppercase;
+      font-weight: 650;
+      letter-spacing: .025em;
+    }
+    .controls legend { margin-bottom: .4rem; padding: 0; font-size: .78rem; }
+    .choice-row { display: flex; gap: .35rem; }
+    .choice-row label { position: relative; display: flex; cursor: pointer; }
+    .choice-row input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    .choice-row span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #bdb8aa;
+      border-radius: .25rem;
+      padding: .35rem .7rem;
+      min-height: 44px;
+      font-size: .8rem;
+      line-height: 1.2;
+      text-align: center;
+    }
+    .choice-row input:checked + span { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .choice-row input:focus-visible + span, :is(summary, a):focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+    .numeric { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .blue { background-color: var(--blue); }
+    .orange { background-color: var(--orange); }
+    .axis { display: flex; justify-content: space-between; color: var(--muted); font-size: .75rem; line-height: 1.2; }
+    .div-row {
+      display: grid;
+      grid-template-columns: 13.5rem 5.1ch minmax(0, 1fr) 5.1ch;
+      gap: .25rem .55rem;
+      align-items: center;
+      min-height: 2rem;
+      font-size: .9rem;
+    }
+    .left-value { text-align: right; }
+    .icon-label { display: inline-flex; align-items: center; gap: .5rem; white-space: nowrap; }
+    .task-icon { flex: 0 0 auto; width: 1rem; height: 1rem; color: var(--ink); }
+    .div-track { display: grid; grid-template-columns: 1fr 1fr; }
+    .div-track > span { display: flex; height: .75rem; }
+    .div-track .negative { justify-content: end; border-right: 1px solid #a7a194; }
+    .div-head { grid-column: 2 / -1; display: flex; justify-content: space-between; gap: .5rem; color: var(--muted); font-weight: 600; }
+    .div-axis { grid-column: 3; display: grid; grid-template-columns: 1fr auto 1fr; }
+    .div-axis :last-child { justify-self: end; }
+    .key { display: inline-block; width: .65rem; height: .65rem; margin-inline-end: .35rem; }
+    details { margin-top: .9rem; font-size: .84rem; }
+    summary { width: fit-content; cursor: pointer; color: var(--muted); }
+    details:not([open]) .close-details, details[open] .open-details { display: none; }
+    .table-scroll { overflow: auto; margin-top: .5rem; }
+    table { border-collapse: collapse; width: 100%; text-align: right; }
+    th, td { padding: .42rem .35rem; border-bottom: 1px solid var(--line); }
+    th:first-child { text-align: left; }
+    .heatmap {
+      table-layout: fixed;
+      border-collapse: separate;
+      border-spacing: 3px;
+      text-align: center;
+      font-size: .88rem;
+    }
+    .heatmap caption { margin-bottom: .6rem; text-align: left; font-weight: 600; }
+    .heatmap th, .heatmap td { padding: .55rem .2rem; border: 0; }
+    .heatmap thead th { color: var(--muted); font-weight: 600; }
+    .heatmap tr > :first-child { width: 24%; text-align: left; }
+    .heatmap tbody th { font-weight: 550; }
+    .heatmap td { background: color-mix(in srgb, var(--blue) var(--intensity), var(--blue-tint)); }
+    .heatmap td:last-child, .heatmap tbody tr:last-child td {
+      background: #eae8e2;
+      color: var(--muted);
+    }
+    .heatmap tbody tr:last-child th { color: var(--muted); }
+    .track { display: flex; height: .7rem; background: var(--track); }
+    .bar-row { display: grid; grid-template-columns: minmax(8rem, 10.4rem) minmax(0, 1fr) 5.3ch; align-items: center; gap: .55rem; min-height: 1.95rem; font-size: .9rem; }
+    .bar-row .numeric { text-align: right; }
+    #job-ranking .bar-row { grid-template-columns: 13.5rem minmax(0, 1fr) 5.3ch; }
+    .bar-axis { grid-column: 2; }
+    .job-focus { font-weight: 650; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem; }
+    .comparison .bar-row { grid-template-columns: minmax(6.2rem, 7.4rem) minmax(0, 1fr) 5.3ch; }
+    .big-value { display: block; margin-bottom: .5rem; font-size: clamp(2.8rem, 7vw, 4.25rem); font-weight: 650; line-height: 1; }
+    .conclusion-track { height: 1rem; margin-bottom: .4rem; }
+    footer { border-top: 1px solid var(--line); padding-top: 1.35rem; color: var(--muted); font-size: .83rem; }
+    footer p { margin-bottom: .55rem; }
+    a { color: var(--blue); text-underline-offset: .18em; }
+    @media (max-width: 560px) {
+      .comparison { grid-template-columns: 1fr; gap: 1.3rem; }
+      .choice-row span { font-size: .72rem; padding-inline: .45rem; }
+      .bar-row { grid-template-columns: minmax(6.1rem, 34%) minmax(0, 1fr) 5.3ch; gap: .4rem; }
+      .div-row { grid-template-columns: 5.3ch minmax(0, 1fr) 5.3ch; gap: .18rem .45rem; margin-bottom: .4rem; }
+      .div-task, .div-head { grid-column: 1 / -1; }
+      .div-axis { grid-column: 2; }
+      #job-ranking .bar-row { grid-template-columns: minmax(0, 1fr) 5.3ch; gap: .18rem .45rem; margin-bottom: .4rem; }
+      #job-ranking .bar-label { grid-column: 1 / -1; }
+      #job-ranking .bar-axis { grid-column: 1; }
+      .heatmap { font-size: .77rem; border-spacing: 2px; }
+      .heatmap th, .heatmap td { padding: .48rem .1rem; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="survey">U.S. public opinion · August 2024</p>
+    <h1>Better Than Us, or Replacing Us?</h1>
+    <p class="deck">Could AI write a better news story? Will it mean fewer jobs for journalists? In 2024, Americans weighed in on what AI might do well and whose jobs might change.</p>
+  </header>
+
+  <section aria-labelledby="tasks-title">
+    <h2 id="tasks-title">Would AI do it better?</h2>
+    <p class="context">Across eight tasks, how did people rate AI against a professional?</p>
+    <figure>
+      <fieldset class="controls" id="sort-tasks">
+        <legend>Sort tasks</legend>
+        <div class="choice-row">
+          <label><input type="radio" name="task-order" value="better" aria-controls="task-ranking" checked><span>Most “better”</span></label>
+          <label><input type="radio" name="task-order" value="worse" aria-controls="task-ranking"><span>Most “worse”</span></label>
+        </div>
+      </fieldset>
+      <div id="task-ranking" role="group" aria-label="Share saying AI would do better or worse on eight tasks" aria-live="polite"></div>
+      <details>
+        <summary><span class="open-details">Show all ratings</span><span class="close-details">Hide full ratings</span></summary>
+        <div class="table-scroll" id="task-details"></div>
+      </details>
+      <figcaption>Diagnosis leads the Better list, yet more people rated AI <strong>worse</strong> (33%) than <strong>better</strong> (26%). Switch to Most “worse” and hiring moves to the top.</figcaption>
+    </figure>
+  </section>
+
+  <section aria-labelledby="sector-title">
+    <h2 id="sector-title">Good for the field. Good at the task?</h2>
+    <p class="context">Pick a field. Read across a row to see how people with that outlook rated AI on the task.</p>
+    <figure>
+      <fieldset class="controls" id="compare-sector">
+        <legend>Pick a field</legend>
+        <div class="choice-row">
+          <label><input type="radio" name="field" value="medicine" aria-controls="sector-chart" checked><span>Medical care</span></label>
+          <label><input type="radio" name="field" value="news" aria-controls="sector-chart"><span>News</span></label>
+          <label><input type="radio" name="field" value="arts" aria-label="Arts and entertainment" aria-controls="sector-chart"><span>Arts</span></label>
+        </div>
+      </fieldset>
+      <div id="sector-chart" aria-live="polite"></div>
+      <figcaption id="sector-caption"></figcaption>
+    </figure>
+  </section>
+
+  <section aria-labelledby="jobs-title">
+    <h2 id="jobs-title">Where do people expect fewer jobs?</h2>
+    <p class="context">Share who think AI will mean fewer jobs in each occupation over 20 years.</p>
+    <figure>
+      <div id="job-ranking" role="group" aria-label="Share expecting fewer jobs in each of ten occupations"></div>
+      <figcaption><strong>73%</strong> expected fewer cashier jobs, the highest share on the list.</figcaption>
+    </figure>
+  </section>
+
+  <section aria-labelledby="comparison-title">
+    <h2 id="comparison-title">Do people who rate AI better expect fewer jobs?</h2>
+    <p class="context">Each bar shows how many people expect fewer jobs. The two groups rated AI better or worse at the task below the job title.</p>
+    <figure>
+      <fieldset class="controls" id="compare-occupation">
+        <legend>Compare doctors with</legend>
+        <div class="choice-row">
+          <label><input type="radio" name="occupation" value="journalists" aria-controls="job-comparison" checked><span>Journalists</span></label>
+          <label><input type="radio" name="occupation" value="musicians" aria-controls="job-comparison"><span>Musicians</span></label>
+          <label><input type="radio" name="occupation" value="truck-drivers" aria-controls="job-comparison"><span>Truck drivers</span></label>
+        </div>
+      </fieldset>
+      <div class="comparison" id="job-comparison" role="group" aria-label="Expectations of fewer jobs by AI task rating" aria-live="polite"></div>
+      <figcaption id="job-comparison-caption"></figcaption>
+    </figure>
+  </section>
+
+  <section aria-labelledby="outlook-title">
+    <h2 id="outlook-title">Better ways to work. Fewer jobs?</h2>
+    <figure>
+      <div role="group" aria-label="50.5 percent of this group also expected fewer jobs overall">
+        <span class="big-value numeric" aria-hidden="true">50.5%</span>
+        <div class="track conclusion-track" aria-hidden="true"><span class="orange" style="width:50.5%"></span></div>
+        <div class="axis numeric" aria-hidden="true"><span>0%</span><span>50%</span><span>100%</span></div>
+      </div>
+      <figcaption>About half of those who expect AI to improve how people work also expect <strong>fewer jobs overall</strong>.</figcaption>
+    </figure>
+  </section>
+
+  <footer>
+    <p><strong>Data source</strong> · Pew Research Center, American Trends Panel Wave 152. The survey reached 5,410 U.S. adults on August 12–18, 2024.</p>
+    <p>Figures use survey weights. Each chart uses the people who answered its questions. Some job and field questions went to half the sample. In the truck-driver comparison, the task was driving a passenger.</p>
+    <a class="source-link" href="https://www.pewresearch.org/dataset/american-trends-panel-wave-152/">View Pew data</a>
+  </footer>
+</main>
+<script>
+  const byId = id => document.getElementById(id);
+  const percent = value => value.toFixed(1) + '%';
+  const tasks = [
+    { name: 'Medical diagnosis', icon: 'M4 6h16v14H4z M9 6V4h6v2 M12 9v8 M8 13h8', better: 26.4, same: 15.0, worse: 32.7, unsure: 26.0 },
+    { name: 'Write news', icon: 'M5 4h14v16H5z M8 8h8 M8 12h8 M8 16h5', better: 19.0, same: 20.3, worse: 40.8, unsure: 19.9 },
+    { name: 'Make a hiring decision', icon: 'M13 7a3 3 0 1 0-6 0 3 3 0 0 0 6 0z M4 20v-2a6 6 0 0 1 9.5-4.9 M15 17l2 2 4-4', better: 11.4, same: 15.3, worse: 51.7, unsure: 21.6 },
+    { name: 'Write a song', icon: 'M10 18V5l10-2v13 M10 18a3 2 0 1 1-6 0 3 2 0 0 1 6 0z M20 16a3 2 0 1 1-6 0 3 2 0 0 1 6 0z', better: 14.1, same: 19.1, worse: 43.4, unsure: 23.5 },
+    { name: 'Approve a loan', icon: 'M3 9l9-5 9 5z M4 20h16 M7 12v5 M12 12v5 M17 12v5', better: 18.8, same: 19.6, worse: 38.8, unsure: 22.7 },
+    { name: 'Decide who gets parole', icon: 'M12 3v16 M7 20h10 M4 6h16 M6 6l-3 7h6z M18 6l-3 7h6z', better: 9.9, same: 11.3, worse: 49.3, unsure: 29.4 },
+    { name: 'Drive someone', icon: 'M4 17v3 M20 17v3 M3 12l3-6h12l3 6v5H3z M3 12h18 M7 14.5h.1 M17 14.5h.1', better: 19.2, same: 20.1, worse: 37.1, unsure: 23.6 },
+    { name: 'Provide customer service', icon: 'M4 14v-3a8 8 0 0 1 16 0v5a4 4 0 0 1-4 4h-3 M4 12h4v5H5a1 1 0 0 1-1-1z M20 12h-4v5h3a1 1 0 0 0 1-1z', better: 18.9, same: 18.6, worse: 46.8, unsure: 15.8 }
+  ];
+  const jobs = [
+    ['Cashiers', 73.1, 'M4 12h16l1 7H3z M8 12V5h8v7 M10 8h4 M7 16h.1 M10 16h.1 M13 16h4'],
+    ['Factory workers', 67.0, 'M3 20V9l6 4V9l6 4V5h4l2 15z M7 17h.1 M11 17h.1 M15 17h.1'],
+    ['Journalists', 59.1, tasks[1].icon],
+    ['Software engineers', 47.9, 'M9 7l-5 5 5 5 M15 7l5 5-5 5 M14 5l-4 14'],
+    ['Musicians', 45.2, tasks[3].icon],
+    ['Teachers', 43.5, 'M12 6C9 4 5 4 3 5v14c3-1 6-1 9 1 3-2 6-2 9-1V5c-2-1-6-1-9 1z M12 6v14'],
+    ['Truck drivers', 32.6, 'M7 18H3V6h12v12h-4 M15 10h4l3 4v4h-3 M11 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0z M19 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0z'],
+    ['Mental health therapists', 29.5, 'M20 14a2 2 0 0 1-2 2h-6l-5 4v-4H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z M8 9h8 M8 12h5'],
+    ['Doctors', 28.0, tasks[0].icon],
+    ['Lawyers', 22.8, tasks[5].icon]
+  ];
+  const sectorPairs = {
+    medicine: { task: 'Medical diagnosis', field: 'medical care', values: [[44.9,17.7,18.3,19.1],[19.6,21.8,34,24.5],[8.4,9.2,64,18.4],[7.7,9.9,24.9,57.6]] },
+    news: { task: 'Writing a news story', field: 'the news people get', values: [[40.4,25.8,21.6,12.2],[27.7,28.1,27.4,16.9],[14,18.3,56.6,11.1],[12,15.9,19.6,52.5]] },
+    arts: { task: 'Writing a song', field: 'arts and entertainment', values: [[26.9,27,31.2,14.9],[18,25.7,36.1,20.2],[11.1,16,62.5,10.5],[6.8,8.9,19.2,65.1]] }
+  };
+  const doctors = { name: 'Doctors', task: 'Making a diagnosis', better: 30.1, worse: 33.8 };
+  const comparisons = {
+    journalists: {
+      name: 'Journalists', task: 'Writing a news story', better: 66.5, worse: 68.1,
+      caption: 'About two in three expected fewer journalism jobs, whichever way they rated AI at writing news.'
+    },
+    musicians: {
+      name: 'Musicians', task: 'Writing a song', better: 56.3, worse: 51.4,
+      caption: 'About half expected fewer jobs for musicians in both groups.'
+    },
+    'truck-drivers': {
+      name: 'Truck drivers', task: 'Driving a passenger', better: 50.2, worse: 29.9,
+      caption: 'About half of those who rated AI better at driving a passenger expected fewer trucking jobs. In the Worse group, it was about three in ten.'
+    }
+  };
+  const axis = '<div class="bar-row" aria-hidden="true"><div class="bar-axis axis numeric"><span>0%</span><span>50%</span><span>100%</span></div></div>';
+
+  function iconLabel(label, icon) {
+    return `<span class="icon-label">
+      <svg class="task-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${icon}"></path></svg>
+      <span>${label}</span>
+    </span>`;
+  }
+
+  function renderTasks(metric, animate = false) {
+    const ranking = byId('task-ranking');
+    const previousPositions = new Map();
+    if (animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      for (const row of ranking.querySelectorAll('[data-task]')) {
+        previousPositions.set(row.dataset.task, row.getBoundingClientRect().top);
+      }
+    }
+    const ranked = [...tasks].sort((a, b) => b[metric] - a[metric]);
+    ranking.innerHTML = `
+      <div class="div-row" aria-hidden="true"><div class="div-head"><span><i class="key orange"></i>AI worse</span><span><i class="key blue"></i>AI better</span></div></div>
+      ${ranked.map(({name, icon, better, worse}) => `
+        <div class="div-row" data-task="${name}" role="group" aria-label="${name}. AI worse ${percent(worse)}. AI better ${percent(better)}.">
+          <span class="div-task">${iconLabel(name, icon)}</span>
+          <span class="left-value numeric" aria-hidden="true">${percent(worse)}</span>
+          <div class="div-track" aria-hidden="true">
+            <span class="negative"><i class="orange" style="width:${worse / 60 * 100}%"></i></span>
+            <span><i class="blue" style="width:${better / 60 * 100}%"></i></span>
+          </div>
+          <span class="numeric" aria-hidden="true">${percent(better)}</span>
+        </div>`).join('')}
+      <div class="div-row" aria-hidden="true"><div class="div-axis axis numeric"><span>60%</span><span>0</span><span>60%</span></div></div>`;
+    byId('task-details').innerHTML = `
+      <table class="numeric">
+        <thead><tr><th scope="col">Task</th><th scope="col">Worse</th><th scope="col">About the same</th><th scope="col">Better</th><th scope="col">Not sure</th></tr></thead>
+        <tbody>${ranked.map(({name, worse, same, better, unsure}) => `
+          <tr><th scope="row">${name}</th><td>${percent(worse)}</td><td>${percent(same)}</td><td>${percent(better)}</td><td>${percent(unsure)}</td></tr>`).join('')}</tbody>
+      </table>`;
+
+    if (previousPositions.size) {
+      for (const row of ranking.querySelectorAll('[data-task]')) {
+        const offset = previousPositions.get(row.dataset.task) - row.getBoundingClientRect().top;
+        if (offset) row.animate([{ transform: `translateY(${offset}px)` }, { transform: 'translateY(0)' }],
+          { duration: 300, easing: 'ease-out' });
+      }
+    }
+  }
+
+  function bar(label, value, color, { focus = false, icon } = {}) {
+    return `<div class="bar-row${focus ? ' job-focus' : ''}">
+      <span class="bar-label">${icon ? iconLabel(label, icon) : label}</span>
+      <div class="track" aria-hidden="true"><span class="${color}" style="width:${value}%"></span></div>
+      <span class="numeric">${percent(value)}</span>
+    </div>`;
+  }
+
+  function renderSector(key) {
+    const { task, field, values } = sectorPairs[key];
+    const rowLabels = ['Positive', 'Mixed', 'Negative', 'Unsure'];
+    byId('sector-chart').innerHTML = `
+      <table class="heatmap">
+        <caption>How people rated AI · ${task}</caption>
+        <thead><tr><th scope="col">Outlook</th><th scope="col">Better</th><th scope="col">Same</th><th scope="col">Worse</th><th scope="col">Unsure</th></tr></thead>
+        <tbody>${values.map((row, i) => `
+          <tr><th scope="row">${rowLabels[i]}</th>${row.map(value =>
+            `<td class="numeric" style="--intensity:${5 + value * 0.82}%">${percent(value)}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table>`;
+    const [better, , worse] = values[0];
+    byId('sector-caption').textContent = `Look at the Positive row. Among people who saw AI as good for ${field}, ${Math.round(better)}% rated it better at the task and ${Math.round(worse)}% rated it worse.`;
+  }
+  byId('job-ranking').innerHTML = jobs.map(([name, value, icon]) =>
+    bar(name, value, 'orange', { icon, focus: name === 'Doctors' || name === 'Journalists' })
+  ).join('') + axis;
+  function renderComparison(key) {
+    const selected = comparisons[key];
+    byId('job-comparison').innerHTML = [doctors, selected].map(({name, task, better, worse}) => `
+      <div>
+        <h3>${name}</h3>
+        <p class="context">${task}</p>
+        ${bar('Rated AI better', better, 'blue')}
+        ${bar('Rated AI worse', worse, 'orange')}
+        ${axis}
+      </div>`).join('');
+    byId('job-comparison-caption').textContent = selected.caption;
+  }
+
+  function connectChoices(id, render) {
+    const group = byId(id);
+    render(group.querySelector('input:checked').value, false);
+    group.addEventListener('change', event => render(event.target.value, true));
+  }
+
+  connectChoices('sort-tasks', renderTasks);
+  connectChoices('compare-sector', renderSector);
+  connectChoices('compare-occupation', renderComparison);
+</script>
+</body>
+</html>
